@@ -1,0 +1,7 @@
+id=playintegrityfix
+name=Play Integrity Fix
+version=v8.4
+versionCode=84
+author=kdrag0n, Displax, chiteroman
+description=Fixes Play Integrity API (and SafetyNet) veredicts. IT DOESN'T PASS STRONG VEREDICT.
+updateJson=https://raw.githubusercontent.com/chiteroman/PlayIntegrityFix/main/update.json
