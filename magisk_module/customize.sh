@@ -16,6 +16,12 @@ if [ -d "/data/adb/modules/safetynet-fix" ]; then
     touch "/data/adb/modules/safetynet-fix/remove"
 fi
 
+# Check if MagiskHidePropsConf is installed
+if [ -d "/data/adb/modules/MagiskHidePropsConf" ]; then
+	ui_print "! MagiskHidePropsConf module will be removed due incompatibility issues."
+    touch "/data/adb/modules/MagiskHidePropsConf/remove"
+fi
+
 # Android < 8.0
 if [ "$API" -lt 26 ]; then
     abort "!!! You can't use this module on Android < 8.0"

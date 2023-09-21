@@ -25,9 +25,8 @@ public class CustomAndroidKeyStoreSpi extends KeyStoreSpi {
     public Certificate[] engineGetCertificateChain(String alias) {
         if (EntryPoint.isDroidGuard()) {
             throw new UnsupportedOperationException();
-        } else {
-            return keyStoreSpi.engineGetCertificateChain(alias);
         }
+        return keyStoreSpi.engineGetCertificateChain(alias);
     }
 
     @Override

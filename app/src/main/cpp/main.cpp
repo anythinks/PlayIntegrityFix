@@ -13,12 +13,20 @@ typedef void (*T_Callback)(void *, const char *, const char *, uint32_t);
 
 static void (*o_hook)(const prop_info *, T_Callback, void *);
 
-static volatile T_Callback o_callback;
+static T_Callback o_callback;
 
 static void
 handle_system_property(void *cookie, const char *name, const char *value, uint32_t serial) {
-    if (std::string_view(name).compare("ro.product.first_api_level") == 0) {
-        LOGD("Set first_api_level to 25 (Android 7.1), original value: %s", value);
+    if (std::string_view(name).compare("ro.secure") == 0 ||
+        std::string_view(name).compare("ro.boot.flash.locked") == 0) {
+        value = "1";
+    } else if (std::string_view(name).compare("ro.debuggable") == 0) {
+        value = "0";
+    } else if (std::string_view(name).compare("ro.boot.vbmeta.device_state") == 0) {
+        value = "locked";
+    } else if (std::string_view(name).compare("ro.boot.verifiedbootstate") == 0) {
+        value = "green";
+    } else if (std::string_view(name).compare("ro.product.first_api_level") == 0) {
         value = "25";
     }
     o_callback(cookie, name, value, serial);
@@ -79,16 +87,6 @@ public:
 
         LOGD("Dex file size: %d", static_cast<int>(dexFile.size()));
 
-        void *handle = DobbySymbolResolver(nullptr, "__system_property_read_callback");
-
-        if (handle == nullptr) {
-            LOGD("Couldn't get __system_property_read_callback handle, REPORT TO @chiteroman at XDA");
-            LOGD("Module will continue injecting .dex file, but it can't ensure to pass DEVICE veredict");
-        } else {
-            LOGD("Got __system_property_read_callback handle at %p", handle);
-            DobbyHook(handle, (dobby_dummy_func_t) my_hook, (dobby_dummy_func_t *) &o_hook);
-        }
-
         LOGD("getSystemClassLoader");
         auto clClass = env->FindClass("java/lang/ClassLoader");
         auto getSystemClassLoader = env->GetStaticMethodID(clClass, "getSystemClassLoader",
@@ -122,6 +120,15 @@ public:
         env->DeleteLocalRef(entryClassObj);
         env->DeleteLocalRef(dexClClass);
         env->DeleteLocalRef(clClass);
+
+        auto handle = DobbySymbolResolver(nullptr, "__system_property_read_callback");
+
+        if (handle == nullptr) {
+            LOGD("Couldn't get __system_property_read_callback handle");
+        } else {
+            DobbyHook(handle, (void *) my_hook, (void **) &o_hook);
+            LOGD("Got __system_property_read_callback handle at %p", handle);
+        }
     }
 
     void preServerSpecialize(zygisk::ServerSpecializeArgs *args) override {

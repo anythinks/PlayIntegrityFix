@@ -33,7 +33,7 @@ public class EntryPoint {
 
     public static void spoofDeviceProps() {
         if (Build.HOST.equals("xiaomi.eu")) {
-            Log.i(TAG, "Your ROM already spoof device props. If Play Integrity / SafetyNet still failing, contact @chiteroman on XDA");
+            Log.i(TAG, "xiaomi.eu custom ROM already spoof props, you don't need this module with this ROM (if it's updated)");
             return;
         }
         setBuildProp("MODEL", "Pixel XL");
