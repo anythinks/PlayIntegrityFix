@@ -1,3 +1,4 @@
-- Fixed Wi-Fi calling.
-- Should work in all Android +8.0 devices.
-- Cleaned Java and native code.
+- Remove a lot of useless code in final shared libraries
+- Improved Java code
+- Allow MagiskHidePropsConfig to be installed (needed for few devices, check #3 issue on GitHub)
+- Disable safetynet-fix instead of removing it if my module is enabled
