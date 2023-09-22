@@ -8,18 +8,10 @@ else
     abort    "*********************************************************"
 fi
 
-rm -rf "/data/adb/SNFix.dex"
-
 # Check if safetynet-fix is installed
 if [ -d "/data/adb/modules/safetynet-fix" ]; then
-	ui_print "! safetynet-fix module will be removed due incompatibility issues."
-    touch "/data/adb/modules/safetynet-fix/remove"
-fi
-
-# Check if MagiskHidePropsConf is installed
-if [ -d "/data/adb/modules/MagiskHidePropsConf" ]; then
-	ui_print "! MagiskHidePropsConf module will be removed due incompatibility issues."
-    touch "/data/adb/modules/MagiskHidePropsConf/remove"
+	ui_print "! safetynet-fix module will be disabled"
+    touch "/data/adb/modules/safetynet-fix/disable"
 fi
 
 # Android < 8.0

@@ -13,7 +13,7 @@ typedef void (*T_Callback)(void *, const char *, const char *, uint32_t);
 
 static void (*o_hook)(const prop_info *, T_Callback, void *);
 
-static T_Callback o_callback;
+static volatile T_Callback o_callback;
 
 static void
 handle_system_property(void *cookie, const char *name, const char *value, uint32_t serial) {

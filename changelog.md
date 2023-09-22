@@ -1,3 +1,0 @@
-- Fixed Wi-Fi calling.
-- Should work in all Android +8.0 devices.
-- Cleaned Java and native code.
