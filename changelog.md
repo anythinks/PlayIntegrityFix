@@ -1,4 +1,1 @@
-- Remove a lot of useless code in final shared libraries
-- Improved Java code
-- Allow MagiskHidePropsConfig to be installed (needed for few devices, check #3 issue on GitHub)
-- Disable safetynet-fix instead of removing it if my module is enabled
+- Removed STL from libs

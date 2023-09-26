@@ -17,16 +17,7 @@ static volatile T_Callback o_callback;
 
 static void
 handle_system_property(void *cookie, const char *name, const char *value, uint32_t serial) {
-    if (std::string_view(name).compare("ro.secure") == 0 ||
-        std::string_view(name).compare("ro.boot.flash.locked") == 0) {
-        value = "1";
-    } else if (std::string_view(name).compare("ro.debuggable") == 0) {
-        value = "0";
-    } else if (std::string_view(name).compare("ro.boot.vbmeta.device_state") == 0) {
-        value = "locked";
-    } else if (std::string_view(name).compare("ro.boot.verifiedbootstate") == 0) {
-        value = "green";
-    } else if (std::string_view(name).compare("ro.product.first_api_level") == 0) {
+    if (std::string_view(name).compare("ro.product.first_api_level") == 0) {
         value = "25";
     }
     o_callback(cookie, name, value, serial);
@@ -58,28 +49,29 @@ public:
 
         api->setOption(zygisk::FORCE_DENYLIST_UNMOUNT);
 
-        if (isGmsUnstable) {
-            int fd = api->connectCompanion();
-            int size;
-            if (recv(fd, &size, sizeof(size), 0) < 1) {
-                close(fd);
-                api->setOption(zygisk::DLCLOSE_MODULE_LIBRARY);
-                LOGD("Error recv size");
-                return;
-            }
-            dexFile.resize(size);
-            if (recv(fd, dexFile.data(), dexFile.size(), 0) < 1) {
-                close(fd);
-                dexFile.clear();
-                dexFile.shrink_to_fit();
-                api->setOption(zygisk::DLCLOSE_MODULE_LIBRARY);
-                LOGD("Error recv .dex data");
-                return;
-            }
-            close(fd);
-        } else {
+        if (!isGmsUnstable) {
             api->setOption(zygisk::DLCLOSE_MODULE_LIBRARY);
+            return;
         }
+
+        int fd = api->connectCompanion();
+        int size;
+        if (recv(fd, &size, sizeof(size), 0) < 1) {
+            close(fd);
+            api->setOption(zygisk::DLCLOSE_MODULE_LIBRARY);
+            LOGD("Error recv size");
+            return;
+        }
+        dexFile.resize(size);
+        if (recv(fd, dexFile.data(), dexFile.size(), 0) < 1) {
+            close(fd);
+            dexFile.clear();
+            dexFile.shrink_to_fit();
+            api->setOption(zygisk::DLCLOSE_MODULE_LIBRARY);
+            LOGD("Error recv .dex data");
+            return;
+        }
+        close(fd);
     }
 
     void postAppSpecialize(const zygisk::AppSpecializeArgs *args) override {
