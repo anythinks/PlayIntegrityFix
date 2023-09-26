@@ -3,5 +3,5 @@ name=Play Integrity Fix
 version=v8.7
 versionCode=87
 author=kdrag0n, Displax, chiteroman
-description= Fixes Play Integrity API (and SafetyNet) veredicts.
+description= Fixes Play Integrity API (and SafetyNet) verdicts.
 updateJson=https://raw.githubusercontent.com/chiteroman/PlayIntegrityFix/main/update.json
